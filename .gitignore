@@ -1,0 +1,14 @@
+# Swift 本地构建
+.build/
+.swiftpm/
+
+# xcodegen 生成的工程(只提交 project.yml)
+*.xcodeproj
+
+# Xcode 杂项
+xcuserdata/
+*.xcuserstate
+.DS_Store
+
+# 云构建产物
+ios-app/build/

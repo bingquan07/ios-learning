@@ -1,0 +1,59 @@
+name: iOS 云编译
+# 没有 Mac 的开发循环:push 后在 GitHub 的 macOS 机器上
+# 编译 App → 装进官方模拟器 → 启动 → 截图,截图在 Actions 页面下载。
+on:
+  push:
+    branches: [main]
+    paths: ["ios-app/**", ".github/workflows/ios.yml"]
+  workflow_dispatch: {} # 也允许手动触发
+
+concurrency:
+  group: ios-build
+  cancel-in-progress: true # 连续 push 时取消旧编译,不排队
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 选一个可用的 iPhone 模拟器
+        id: sim
+        run: |
+          DEVICE=$(xcrun simctl list devices available | grep -m1 'iPhone' | sed 's/ (.*//; s/^ *//')
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+          echo "使用模拟器: $DEVICE"
+
+      - name: 生成 Xcode 工程(仓库只存 project.yml,不存 .xcodeproj)
+        run: |
+          brew install xcodegen
+          cd ios-app && xcodegen generate
+
+      - name: 编译
+        run: |
+          cd ios-app
+          xcodebuild -scheme LearnApp \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }},OS=latest" \
+            -derivedDataPath build \
+            build
+
+      - name: 启动模拟器、安装并运行 App,截图
+        run: |
+          DEVICE="${{ steps.sim.outputs.device }}"
+          xcrun simctl boot "$DEVICE" 2>/dev/null || true
+          xcrun simctl bootstatus "$DEVICE" -b
+          APP=ios-app/build/Build/Products/Debug-iphonesimulator/LearnApp.app
+          xcrun simctl install "$DEVICE" "$APP"
+          xcrun simctl launch "$DEVICE" com.learning.iosapp
+          sleep 6
+          xcrun simctl io "$DEVICE" screenshot screenshot.png
+          echo "![simulator](screenshot.png)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 上传截图与构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: learnapp-${{ github.run_number }}
+          path: |
+            screenshot.png
+            ios-app/build/Build/Products/Debug-iphonesimulator/LearnApp.app/**
+          retention-days: 14

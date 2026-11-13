@@ -1,0 +1,20 @@
+name: LearnApp
+options:
+  bundleIdPrefix: com.learning
+  deploymentTarget:
+    iOS: "17.0"
+targets:
+  LearnApp:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    info:
+      path: Sources/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.learning.iosapp
+      SWIFT_VERSION: "5.9"
