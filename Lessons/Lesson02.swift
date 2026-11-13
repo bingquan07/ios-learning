@@ -31,7 +31,7 @@ func lesson02() {
     // ── 2.4 reduce ──────────────────────────────────────────
     // reduce 把集合折叠成一个值:reduce(初始值) { 累加规则 }。
     // TODO: 让 sum 等于 nums 所有数之和(21)。
-    let sum = nums.reduce(0) { $0 }               // ← 改这里
+    let sum = nums.reduce(0) { x, _ in x }        // ← 改这里(提示:$0 是累积值,$1 是当前元素)
     check(sum == 21, "2.4 reduce")
 
     // ── 2.5 结构体 struct ────────────────────────────────────

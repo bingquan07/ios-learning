@@ -5,6 +5,7 @@ func lesson01() {
     // ── 1.1 let vs var ─────────────────────────────────────
     // let 不可变,var 可变。下面这行之后没人再改 greeting,
     // 所以应该用 let。TODO: 把 var 改成 let。
+    // (改之前编译器会一直警告 "was never mutated" —— 它也在催你。)
     var greeting = "你好, Swift"
     check(greeting == "你好, Swift", "1.1 能用 let 就用 let")
 
