@@ -23,6 +23,8 @@ struct RootView: View {
                 .tabItem { Label("学习", systemImage: "book.fill") }
             StateDemoView()
                 .tabItem { Label("练习", systemImage: "square.and.pencil") }
+            StepTesterView()
+                .tabItem { Label("数据实验", systemImage: "figure.walk") }
         }
     }
 }

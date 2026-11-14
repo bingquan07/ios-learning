@@ -15,6 +15,12 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        NSHealthShareUsageDescription: 读取步数样本,用于显示你当天的运动数据。
+        NSHealthUpdateUsageDescription: 向你的健康库写入测试步数样本,用于调试运动计数功能。
+    entitlements:
+      path: Sources/LearnApp.entitlements
+      properties:
+        com.apple.developer.healthkit: true
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.learning.iosapp
       SWIFT_VERSION: "5.9"
